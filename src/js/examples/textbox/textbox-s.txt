@@ -1,6 +1,44 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
-export default class TextBox extends React.Component {
+class TextBoxExample extends React.Component {
+  constructor() {
+    super();
+    this.form = React.createRef();
+
+    this.state = {
+      search: '',
+    };
+  }
+
+  onSubmit = (e) => {
+    const search = this.form.current[0];
+
+    this.setState({
+      search: search.value,
+    });
+
+    e.preventDefault();
+  };
+
+  render() {
+    return (
+      <React.Fragment>
+        <form onSubmit={this.onSubmit} ref={this.form}>
+          <TextBox id="search-box" />
+          <button type="submit"> Search </button>
+        </form>
+        <div>State on parent component value: {this.state.search}</div>
+      </React.Fragment>
+    );
+  }
+}
+
+TextBoxExample.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+class TextBox extends React.Component {
   state = {
     value: '',
   };

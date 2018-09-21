@@ -1,12 +1,39 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export default function TextBox(props) {
+class TextBoxExample extends React.Component {
+  state = {
+    value: '',
+  };
+
+  onChange = (name) => (value) => {
+    this.setState({ [name]: value });
+  };
+
+  render() {
+    const { classes } = this.props;
+
+    return (
+      <React.Fragment>
+        <div className={classes.textBox}>
+          <TextBox value={this.state.value} onChange={this.onChange('value')} />
+        </div>
+        <div>State on parent component value: {this.state.value}</div>
+      </React.Fragment>
+    );
+  }
+}
+
+TextBoxExample.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+function TextBox(props) {
   const { onChange } = props;
 
   const onChangeValue = (e) => {
     onChange(e.target.value, e);
-  }
+  };
 
   return <input type="text" {...props} onChange={onChangeValue} />;
 }
