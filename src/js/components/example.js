@@ -21,6 +21,9 @@ class Example extends React.Component {
     const { classes, children, code } = this.props;
     const { mode } = this.state;
 
+    let codeClasses = classes.code;
+    codeClasses +=
+      ' ' + (mode === CodeMode ? classes.codeVisible : '');
     return (
       <React.Fragment>
         <div className={classes.root}>
@@ -33,13 +36,9 @@ class Example extends React.Component {
           </div>
           <div className={classes.example}>
             <div>{children}</div>
-            {mode === CodeMode ? (
-              <div className={classes.code}>
-                <Highlight language="javascript">{code}</Highlight>
-              </div>
-            ) : (
-              undefined
-            )}
+            <div className={codeClasses}>
+              <Highlight language="javascript">{code}</Highlight>
+            </div>
           </div>
         </div>
       </React.Fragment>
@@ -53,7 +52,7 @@ Example.propTypes = {
   code: PropTypes.string.isRequired,
 };
 
-const styles = () => ({
+const styles = (theme) => ({
   root: {
     position: 'relative',
   },
@@ -65,6 +64,15 @@ const styles = () => ({
   },
   code: {
     textAlign: 'left',
+    transition: 'all 250ms ease-in-out',
+    transform: 'scaleY(0)',
+    fontSize: 0,
+    transformOrigin: 'top',
+    overflow: 'hidden',
+  },
+  codeVisible: {
+    transform: 'scaleY(1)',
+    fontSize: theme.typography.fontSize,
   },
   buttonBar: {
     position: 'absolute',
