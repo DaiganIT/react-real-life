@@ -1,0 +1,66 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Button } from '@material-ui/core';
+import TextBox from '../textbox/textbox-sfc';
+import PubSub from 'pubsub-js';
+
+export default class SearchBox extends React.Component {
+  state = {
+    value: '',
+  };
+
+  onChange = (value) => {
+    this.setState({ value: value });
+  };
+
+  onSearch = () => {
+    PubSub.publish(`SEARCH-${this.props.idPrefix}`, this.state.value);
+  };
+
+  render() {
+    return (
+      <React.Fragment>
+        <TextBox value={this.state.value} onChange={this.onChange} />
+        <Button onClick={this.onSearch}>Search</Button>
+      </React.Fragment>
+    );
+  }
+}
+
+SearchBox.propTypes = {
+  idPrefix: PropTypes.string.isRequired,
+};
+
+class SearchContainer extends React.Component {
+  state = {
+    searchValue: '',
+  };
+
+  componentDidMount() {
+    this.subscription = PubSub.subscribe(
+      `SEARCH-${this.props.idPrefix}`,
+      this.onSearchEvent,
+    );
+  }
+
+  componentWillUnmount() {
+    if (this.subscription) {
+      PubSub.unsubscribe(this.subscription);
+      this.subscription = null;
+    }
+  }
+
+  onSearchEvent = (event, value) => {
+    this.setState({ searchValue: value });
+  };
+
+  render() {
+    return (
+      <React.Fragment>Search value: {this.state.searchValue}</React.Fragment>
+    );
+  }
+}
+
+SearchContainer.propTypes = {
+  idPrefix: PropTypes.string.isRequired,
+};

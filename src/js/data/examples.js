@@ -7,4 +7,8 @@ export default [
     id: 'searchbox',
     name: 'Search Box',
   },
+  {
+    id: 'searchbox-2',
+    name: 'Search Box 2',
+  },
 ];
